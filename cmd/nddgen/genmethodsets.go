@@ -76,7 +76,7 @@ var genmethodsetCmd = &cobra.Command{
 	Aliases:      []string{"gen-methodsets"},
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Printf("ndd-gen started ...")
+		fmt.Println("ndd-gen started ...")
 		pkgs, err := packages.Load(&packages.Config{Mode: LoadMode}, pattern)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("%s : %s", errLoadPackages, pattern))
@@ -105,7 +105,7 @@ var genmethodsetCmd = &cobra.Command{
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
 		}
-		fmt.Printf("ndd-gen finished ...")
+		fmt.Println("ndd-gen finished ...")
 		return nil
 	},
 }
