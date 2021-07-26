@@ -116,7 +116,7 @@ func init() {
 	genmethodsetCmd.Flags().StringVarP(&filenamePC, "filename-pc", "", "zz_generated.pc.go", "The filename of generated provider config files.")
 	genmethodsetCmd.Flags().StringVarP(&filenamePCU, "filename-pcu", "", "zz_generated.pcu.go", "The filename of generated provider config usage files.")
 	genmethodsetCmd.Flags().StringVarP(&filenamePCUList, "filename-pcu-list", "", "zz_generated.pculist.go", "The filename of generated provider list config usage files.")
-	genmethodsetCmd.Flags().StringVarP(&pattern, "packages", "", "", "Package(s) for which to generate methods, for example github.com/netw-device-driver/ndd-core/apis/...")
+	genmethodsetCmd.Flags().StringVarP(&pattern, "paths", "", "", "Package(s) for which to generate methods, for example github.com/netw-device-driver/ndd-core/apis/...")
 }
 
 // GenerateManaged generates the resource.Managed method set.
