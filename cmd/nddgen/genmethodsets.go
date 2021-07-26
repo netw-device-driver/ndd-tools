@@ -94,7 +94,7 @@ var genmethodsetCmd = &cobra.Command{
 		//fmt.Printf("Packages: %v\n", pkgs)
 
 		for _, pkg := range pkgs {
-			fmt.Println(pkg.ID, pkg.GoFiles)
+			//fmt.Println(pkg.ID, pkg.GoFiles)
 			for _, err := range pkg.Errors {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", errLoadingPackages, pattern))
 			}
