@@ -90,7 +90,7 @@ func NewSetConditions(receiver, runtime string) New {
 func NewGetCondition(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
 		f.Commentf("GetCondition of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetCondition").Params(jen.Id("ct").Qual(runtime, "ConditionType")).Qual(runtime, "Condition").Block(
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetCondition").Params(jen.Id("ct").Qual(runtime, "ConditionKind")).Qual(runtime, "Condition").Block(
 			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("GetCondition").Call(jen.Id("ct"))),
 		)
 	}
