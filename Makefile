@@ -5,7 +5,7 @@ all: build
 
 build: ## Build binaries: ndd-gen
 	mkdir -p $(BIN_DIR)
-	go build -o $(BINARY) ./cmd/main.go 
+	go build -o $(BINARY) ./cmd/ndd-gen/main.go 
 
 fmt: ## Run go fmt against code.
 	go fmt ./...
