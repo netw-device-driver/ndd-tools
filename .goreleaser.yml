@@ -12,6 +12,7 @@ builds:
       - linux
     goarch:
       - amd64
+    main: ./cmd
 archives:
   - replacements:
       linux: Linux
@@ -39,7 +40,3 @@ nfpms:
       - rpm
       - deb
     bindir: /usr/bin
-    contents:
-      - src: /usr/bin/ndd-gen
-        dst: /usr/bin/nddgen
-        type: symlink
