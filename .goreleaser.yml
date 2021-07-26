@@ -1,0 +1,45 @@
+# Copyright 2020 Nokia
+# Licensed under the BSD 3-Clause License.
+# SPDX-License-Identifier: BSD-3-Clause
+
+project_name: ndd-gen
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/netw-device-driver/ndd-tools/cmd.version={{.Version}} -X github.com/netw-device-driver/ndd-tools/cmd.commit={{.ShortCommit}} -X github.com/netw-device-driver/ndd-tools/cmd.date={{.Date}}
+    goos:
+      - linux
+    goarch:
+      - amd64
+archives:
+  - replacements:
+      linux: Linux
+checksum:
+  name_template: checksums.txt
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+nfpms:
+  - id: ndd-gen
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    package_name: ndd-gen
+    maintainer: Wim Henderickx <wim.henderickx@nokia.com>
+    description: |
+      ndd-gen generates ndd API type methods. 
+    vendor: Nokia
+    license: GNU GPLv3
+    formats:
+      - rpm
+      - deb
+    bindir: /usr/bin
+    contents:
+      - src: /usr/bin/ndd-gen
+        dst: /usr/bin/nddgen
+        type: symlink
