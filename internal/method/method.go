@@ -90,8 +90,8 @@ func NewSetConditions(receiver, runtime string) New {
 func NewGetCondition(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
 		f.Commentf("GetCondition of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetCondition").Params(jen.Id("ct").Qual(runtime, "ConditionKind")).Qual(runtime, "Condition").Block(
-			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("GetCondition").Call(jen.Id("ct"))),
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetCondition").Params(jen.Id("ck").Qual(runtime, "ConditionKind")).Qual(runtime, "Condition").Block(
+			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("GetCondition").Call(jen.Id("ck"))),
 		)
 	}
 }
@@ -139,6 +139,56 @@ func NewGetDeletionPolicy(receiver, runtime string) New {
 		)
 	}
 }
+
+// NewInitializeTargetConditions returns a NewMethod that writes a InitializeTargetConditions
+// method for the supplied Object to the supplied file.
+func NewInitializeTargetConditions(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("InitializeTargetConditions of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("InitializeTargetConditions").Params().Block(
+			jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Op("=").Id("make").Params(jen.Id("map").Index(jen.String()).Op("*").Qual(runtime, "TargetConditions")),
+		)
+	}
+}
+
+// NewDeleteTargetCondition returns a NewMethod that writes a DeleteTargetCondition
+// method for the supplied Object to the supplied file.
+func NewDeleteTargetCondition(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("DeleteTargetCondition of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("DeleteTargetCondition").Params(jen.Id("target").String()).Block(
+			jen.Id("delete").Params(jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions"), jen.Id("target")),
+		)
+	}
+}
+
+// NewGetTargetCondition returns a NewMethod that writes a GetTargetCondition
+// method for the supplied Object to the supplied file.
+func NewGetTargetCondition(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("GetTargetCondition of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetTargetCondition").Params(jen.Id("target").String(), jen.Id("ck").Qual(runtime, "ConditionKind")).Qual(runtime, "Condition").Block(
+			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Index(jen.Id("target")).Dot("GetCondition").Params(jen.Id("ck"))),
+		)
+	}
+}
+
+// NewSetTargetConditions returns a NewMethod that writes a SetTargetConditions
+// method for the supplied Object to the supplied file.
+func NewSetTargetConditions(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("SetTargetConditions of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetTargetConditions").Params(jen.Id("target").String(), jen.Id("c").Op("...").Qual(runtime, "Condition")).Block(
+			jen.If(jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Index(jen.Id("target")).Op("==").Nil()).Block(
+				jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Index(jen.Id("target")).Op("=").New(jen.Qual(runtime, "TargetConditions")),
+			//	jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Index(jen.Id("target").Op("=").New(jen.Qual(runtime, "TargetConditions")),
+			),
+			jen.Id(receiver).Dot(fields.NameStatus).Dot("TargetConditions").Index(jen.Id("target")).Dot("SetConditions").Params(jen.Id("c").Op("...")),
+		)
+	}
+}
+
+
 
 // NewManagedGetItems returns a New that writes a GetItems method for the
 // supplied object to the supplied file.

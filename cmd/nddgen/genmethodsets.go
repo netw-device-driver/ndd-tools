@@ -132,6 +132,10 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 		"SetProviderConfigReference": method.NewSetProviderConfigReference(receiver, RuntimeImport),
 		"SetDeletionPolicy":          method.NewSetDeletionPolicy(receiver, RuntimeImport),
 		"GetDeletionPolicy":          method.NewGetDeletionPolicy(receiver, RuntimeImport),
+		"InitializeTargetConditions": method.NewInitializeTargetConditions(receiver, RuntimeImport),
+		"DeleteTargetCondition":      method.NewDeleteTargetCondition(receiver, RuntimeImport),
+		"GetTargetCondition":         method.NewGetTargetCondition(receiver, RuntimeImport),
+		"SetTargetConditions":        method.NewSetTargetConditions(receiver, RuntimeImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
