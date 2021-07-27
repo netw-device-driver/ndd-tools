@@ -51,20 +51,23 @@ const (
 )
 
 const (
-	errLoadPackages                   = "cannot load packages"
-	errReadheaderFile                 = "cannot read header file"
-	errWriteManagedResourceMethod     = "cannot write managed resource method set for package"
-	errWriteManagedResourceListMethod = "cannot write managed resource list method set for package"
-	errLoadingPackages                = "error loading packages using pattern"
+	errLoadPackages                     = "cannot load packages"
+	errReadheaderFile                   = "cannot read header file"
+	errWriteManagedResourceMethod       = "cannot write managed resource method set for package"
+	errWriteManagedResourceListMethod   = "cannot write managed resource list method set for package"
+	errLoadingPackages                  = "error loading packages using pattern"
+	errWriteTargetConfigMethod          = "cannot write target config methods"
+	errWriteTargetConfigUsageMethod     = "cannot write target config usage methods"
+	errWriteTargetConfigUsageListMethod = "cannot write target config usage list methods"
 )
 
 var (
 	headerFile          string
 	filenameManaged     string
 	filenameManagedList string
-	filenamePC          string
-	filenamePCU         string
-	filenamePCUList     string
+	filenameTC          string
+	filenameTCU         string
+	filenameTCUList     string
 	pattern             string
 )
 
@@ -90,11 +93,8 @@ var genmethodsetCmd = &cobra.Command{
 			}
 			header = string(h)
 		}
-		//fmt.Println(header)
-		//fmt.Printf("Packages: %v\n", pkgs)
 
 		for _, pkg := range pkgs {
-			//fmt.Println(pkg.ID, pkg.GoFiles)
 			for _, err := range pkg.Errors {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", errLoadingPackages, pattern))
 			}
@@ -102,6 +102,15 @@ var genmethodsetCmd = &cobra.Command{
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
 			if err := GenerateManagedList(filenameManagedList, header, pkg); err != nil {
+				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
+			}
+			if err := GenerateTargetConfig(filenameTC, header, pkg); err != nil {
+				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
+			}
+			if err := GenerateTargetConfigUsage(filenameTCU, header, pkg); err != nil {
+				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
+			}
+			if err := GenerateTargetConfigUsageList(filenameTCUList, header, pkg); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
 		}
@@ -115,9 +124,9 @@ func init() {
 	genmethodsetCmd.Flags().StringVarP(&headerFile, "header-file", "", "", "The contents of this file will be added to the top of all generated files.")
 	genmethodsetCmd.Flags().StringVarP(&filenameManaged, "filename-managed", "", "zz_generated.managed.go", "The filename of generated managed resource files.")
 	genmethodsetCmd.Flags().StringVarP(&filenameManagedList, "filename-managed-list", "", "zz_generated.managedlist.go", "The filename of generated managed list resource files.")
-	genmethodsetCmd.Flags().StringVarP(&filenamePC, "filename-pc", "", "zz_generated.pc.go", "The filename of generated provider config files.")
-	genmethodsetCmd.Flags().StringVarP(&filenamePCU, "filename-pcu", "", "zz_generated.pcu.go", "The filename of generated provider config usage files.")
-	genmethodsetCmd.Flags().StringVarP(&filenamePCUList, "filename-pcu-list", "", "zz_generated.pculist.go", "The filename of generated provider list config usage files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameTC, "filename-tc", "", "zz_generated.tc.go", "The filename of generated Target config files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameTCU, "filename-tcu", "", "zz_generated.tcu.go", "The filename of generated Target config usage files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameTCUList, "filename-tcu-list", "", "zz_generated.tculist.go", "The filename of generated Target list config usage files.")
 	genmethodsetCmd.Flags().StringVarP(&pattern, "paths", "", "", "Package(s) for which to generate methods, for example github.com/netw-device-driver/ndd-core/apis/...")
 }
 
@@ -126,10 +135,12 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 	receiver := "mg"
 
 	methods := method.Set{
+		"SetActive":                  method.NewSetActive(receiver, RuntimeImport),
+		"GetActive":                  method.NewGetActive(receiver, RuntimeImport),
 		"SetConditions":              method.NewSetConditions(receiver, RuntimeImport),
 		"GetCondition":               method.NewGetCondition(receiver, RuntimeImport),
-		"GetProviderConfigReference": method.NewGetProviderConfigReference(receiver, RuntimeImport),
-		"SetProviderConfigReference": method.NewSetProviderConfigReference(receiver, RuntimeImport),
+		"GetTargetConfigReference":   method.NewGetTargetConfigReference(receiver, RuntimeImport),
+		"SetTargetConfigReference":   method.NewSetTargetConfigReference(receiver, RuntimeImport),
 		"SetDeletionPolicy":          method.NewSetDeletionPolicy(receiver, RuntimeImport),
 		"GetDeletionPolicy":          method.NewGetDeletionPolicy(receiver, RuntimeImport),
 		"InitializeTargetConditions": method.NewInitializeTargetConditions(receiver, RuntimeImport),
@@ -173,4 +184,71 @@ func GenerateManagedList(filename, header string, p *packages.Package) error {
 	)
 
 	return errors.Wrap(err, errWriteManagedResourceListMethod)
+}
+
+// GenerateTargetConfig generates the resource.TargetConfig method set.
+func GenerateTargetConfig(filename, header string, p *packages.Package) error {
+	receiver := "p"
+
+	methods := method.Set{
+		"SetUsers":      method.NewSetUsers(receiver),
+		"GetUsers":      method.NewGetUsers(receiver),
+		"SetConditions": method.NewSetConditions(receiver, RuntimeImport),
+		"GetCondition":  method.NewGetCondition(receiver, RuntimeImport),
+	}
+
+	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
+		generate.WithHeaders(header),
+		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
+		generate.WithMatcher(match.AllOf(
+			match.TargetConfig(),
+			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
+		),
+	)
+
+	return errors.Wrap(err, errWriteTargetConfigMethod)
+}
+
+// GenerateTargetConfigUsage generates the resource.TargetConfigUsage method set.
+func GenerateTargetConfigUsage(filename, header string, p *packages.Package) error {
+	receiver := "p"
+
+	methods := method.Set{
+		"SetTargetConfigReference": method.NewSetRootTargetConfigReference(receiver, RuntimeImport),
+		"GetTargetConfigReference": method.NewGetRootTargetConfigReference(receiver, RuntimeImport),
+		"SetResourceReference":     method.NewSetRootResourceReference(receiver, RuntimeImport),
+		"GetResourceReference":     method.NewGetRootResourceReference(receiver, RuntimeImport),
+	}
+
+	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
+		generate.WithHeaders(header),
+		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
+		generate.WithMatcher(match.AllOf(
+			match.TargetConfigUsage(),
+			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
+		),
+	)
+
+	return errors.Wrap(err, errWriteTargetConfigUsageMethod)
+}
+
+// GenerateTargetConfigUsageList generates the
+// resource.TargetConfigUsageList method set.
+func GenerateTargetConfigUsageList(filename, header string, p *packages.Package) error {
+	receiver := "p"
+
+	methods := method.Set{
+		"GetItems": method.NewTargetConfigUsageGetItems(receiver, ResourceImport),
+	}
+
+	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
+		generate.WithHeaders(header),
+		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
+		generate.WithMatcher(match.AllOf(
+			match.TargetConfigUsageList(),
+			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
+		),
+	)
+
+	return errors.Wrap(err, errWriteTargetConfigUsageListMethod)
 }

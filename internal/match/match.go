@@ -1,4 +1,4 @@
-// Package match identifies Go types as common Crossplane resources.
+// Package match identifies Go types as common ndd resources.
 package match
 
 import (
@@ -13,7 +13,7 @@ import (
 type Object func(o types.Object) bool
 
 // Managed returns an Object matcher that returns true if the supplied Object is
-// a Crossplane managed resource.
+// a ndd managed resource.
 func Managed() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
@@ -30,7 +30,7 @@ func Managed() Object {
 }
 
 // ManagedList returns an Object matcher that returns true if the supplied
-// Object is a list of Crossplane managed resource.
+// Object is a list of ndd managed resource.
 func ManagedList() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
@@ -49,43 +49,43 @@ func ManagedList() Object {
 	}
 }
 
-// ProviderConfig returns an Object matcher that returns true if the supplied
-// Object is a Crossplane ProviderConfig.
-func ProviderConfig() Object {
+// TargetConfig returns an Object matcher that returns true if the supplied
+// Object is a ndd TargetConfig.
+func TargetConfig() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsObjectMeta().And(fields.IsEmbedded()),
 			fields.IsSpec(),
 			fields.IsStatus().And(fields.HasFieldThat(
-				fields.IsProviderConfigStatus().And(fields.IsEmbedded()),
+				fields.IsTargetConfigStatus().And(fields.IsEmbedded()),
 			)),
 		)
 	}
 }
 
-// ProviderConfigUsage returns an Object matcher that returns true if the supplied
-// Object is a Crossplane ProviderConfigUsage.
-func ProviderConfigUsage() Object {
+// TargetConfigUsage returns an Object matcher that returns true if the supplied
+// Object is a ndd TargetConfigUsage.
+func TargetConfigUsage() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsObjectMeta().And(fields.IsEmbedded()),
-			fields.IsProviderConfigUsage().And(fields.IsEmbedded()),
+			fields.IsTargetConfigUsage().And(fields.IsEmbedded()),
 		)
 	}
 }
 
-// ProviderConfigUsageList returns an Object matcher that returns true if the
-// supplied Object is a list of Crossplane provider config usages.
-func ProviderConfigUsageList() Object {
+// TargetConfigUsageList returns an Object matcher that returns true if the
+// supplied Object is a list of ndd target config usages.
+func TargetConfigUsageList() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsItems().And(fields.IsSlice()).And(fields.HasFieldThat(
 				fields.IsTypeMeta().And(fields.IsEmbedded()),
 				fields.IsObjectMeta().And(fields.IsEmbedded()),
-				fields.IsProviderConfigUsage().And(fields.IsEmbedded()),
+				fields.IsTargetConfigUsage().And(fields.IsEmbedded()),
 			)),
 		)
 	}

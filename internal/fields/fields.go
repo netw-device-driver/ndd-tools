@@ -32,9 +32,9 @@ const (
 	NameStatus               = "Status"
 	NameResourceSpec         = "ResourceSpec"
 	NameResourceStatus       = "ResourceStatus"
-	NameProviderConfigSpec   = "ProviderConfigSpec"
-	NameProviderConfigStatus = "ProviderConfigStatus"
-	NameProviderConfigUsage  = "ProviderConfigUsage"
+	NameTargetConfigSpec   = "TargetConfigSpec"
+	NameTargetConfigStatus = "TargetConfigStatus"
+	NameTargetConfigUsage  = "TargetConfigUsage"
 	NameItems                = "Items"
 )
 
@@ -48,9 +48,9 @@ const (
 	TypeSuffixStatus               = NameStatus
 	TypeSuffixResourceSpec         = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ResourceSpec"
 	TypeSuffixResourceStatus       = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ResourceStatus"
-	TypeSuffixProviderConfigSpec   = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ProviderConfigSpec"
-	TypeSuffixProviderConfigStatus = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ProviderConfigStatus"
-	TypeSuffixProviderConfigUsage  = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ProviderConfigUsage"
+	TypeSuffixTargetConfigSpec   = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigSpec"
+	TypeSuffixTargetConfigStatus = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigStatus"
+	TypeSuffixTargetConfigUsage  = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigUsage"
 )
 
 func matches(s *types.Struct, m Matcher) bool {
@@ -171,7 +171,7 @@ func IsListMeta() Matcher { return IsTypeNamed(TypeSuffixListMeta, NameListMeta)
 func IsSpec() Matcher { return IsTypeNamed(NameSpec, TypeSuffixSpec) }
 
 // IsSpecTemplate returns a Matcher that returns true if the supplied field
-// appears to be a Crossplane resource class spec template.
+// appears to be a ndd resource class spec template.
 func IsSpecTemplate() Matcher { return IsTypeNamed(NameSpecTemplate, TypeSuffixSpecTemplate) }
 
 // IsStatus returns a Matcher that returns true if the supplied field appears to
@@ -179,29 +179,29 @@ func IsSpecTemplate() Matcher { return IsTypeNamed(NameSpecTemplate, TypeSuffixS
 func IsStatus() Matcher { return IsTypeNamed(NameStatus, TypeSuffixStatus) }
 
 // IsResourceSpec returns a Matcher that returns true if the supplied field
-// appears to be a Crossplane managed resource spec.
+// appears to be a ndd managed resource spec.
 func IsResourceSpec() Matcher { return IsTypeNamed(TypeSuffixResourceSpec, NameResourceSpec) }
 
 // IsResourceStatus returns a Matcher that returns true if the supplied field
-// appears to be a Crossplane managed resource status.
+// appears to be a ndd managed resource status.
 func IsResourceStatus() Matcher { return IsTypeNamed(TypeSuffixResourceStatus, NameResourceStatus) }
 
-// IsProviderConfigSpec returns a Matcher that returns true if the supplied
-// field appears to be a Crossplane provider config spec.
-func IsProviderConfigSpec() Matcher {
-	return IsTypeNamed(TypeSuffixProviderConfigSpec, NameProviderConfigSpec)
+// IsTargetConfigSpec returns a Matcher that returns true if the supplied
+// field appears to be a ndd target config spec.
+func IsTargetConfigSpec() Matcher {
+	return IsTypeNamed(TypeSuffixTargetConfigSpec, NameTargetConfigSpec)
 }
 
-// IsProviderConfigStatus returns a Matcher that returns true if the supplied
-// field appears to be a Crossplane provider config status.
-func IsProviderConfigStatus() Matcher {
-	return IsTypeNamed(TypeSuffixProviderConfigStatus, NameProviderConfigStatus)
+// IsTargetConfigStatus returns a Matcher that returns true if the supplied
+// field appears to be a ndd target config status.
+func IsTargetConfigStatus() Matcher {
+	return IsTypeNamed(TypeSuffixTargetConfigStatus, NameTargetConfigStatus)
 }
 
-// IsProviderConfigUsage returns a Matcher that returns true if the supplied
-// field appears to be a Crossplane provider config usage.
-func IsProviderConfigUsage() Matcher {
-	return IsTypeNamed(TypeSuffixProviderConfigUsage, NameProviderConfigUsage)
+// IsTargetConfigUsage returns a Matcher that returns true if the supplied
+// field appears to be a ndd target config usage.
+func IsTargetConfigUsage() Matcher {
+	return IsTypeNamed(TypeSuffixTargetConfigUsage, NameTargetConfigUsage)
 }
 
 // IsItems returns a Matcher that returns true if the supplied field appears to
