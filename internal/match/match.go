@@ -49,43 +49,43 @@ func ManagedList() Object {
 	}
 }
 
-// TargetConfig returns an Object matcher that returns true if the supplied
-// Object is a ndd TargetConfig.
-func TargetConfig() Object {
+// NetworkNode returns an Object matcher that returns true if the supplied
+// Object is a NetworkNode.
+func NetworkNode() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsObjectMeta().And(fields.IsEmbedded()),
 			fields.IsSpec(),
 			fields.IsStatus().And(fields.HasFieldThat(
-				fields.IsTargetConfigStatus().And(fields.IsEmbedded()),
+				fields.IsNetworkNodeStatus().And(fields.IsEmbedded()),
 			)),
 		)
 	}
 }
 
-// TargetConfigUsage returns an Object matcher that returns true if the supplied
-// Object is a ndd TargetConfigUsage.
-func TargetConfigUsage() Object {
+// NetworkNodeUsage returns an Object matcher that returns true if the supplied
+// Object is a NetworkNodeUsage.
+func NetworkNodeUsage() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsObjectMeta().And(fields.IsEmbedded()),
-			fields.IsTargetConfigUsage().And(fields.IsEmbedded()),
+			fields.IsNetworkNodeUsage().And(fields.IsEmbedded()),
 		)
 	}
 }
 
-// TargetConfigUsageList returns an Object matcher that returns true if the
-// supplied Object is a list of ndd target config usages.
-func TargetConfigUsageList() Object {
+// NetworkNodeUsageList returns an Object matcher that returns true if the
+// supplied Object is a list of NetworkNode usages.
+func NetworkNodeUsageList() Object {
 	return func(o types.Object) bool {
 		return fields.Has(o,
 			fields.IsTypeMeta().And(fields.IsEmbedded()),
 			fields.IsItems().And(fields.IsSlice()).And(fields.HasFieldThat(
 				fields.IsTypeMeta().And(fields.IsEmbedded()),
 				fields.IsObjectMeta().And(fields.IsEmbedded()),
-				fields.IsTargetConfigUsage().And(fields.IsEmbedded()),
+				fields.IsNetworkNodeUsage().And(fields.IsEmbedded()),
 			)),
 		)
 	}

@@ -56,18 +56,18 @@ const (
 	errWriteManagedResourceMethod       = "cannot write managed resource method set for package"
 	errWriteManagedResourceListMethod   = "cannot write managed resource list method set for package"
 	errLoadingPackages                  = "error loading packages using pattern"
-	errWriteTargetConfigMethod          = "cannot write target config methods"
-	errWriteTargetConfigUsageMethod     = "cannot write target config usage methods"
-	errWriteTargetConfigUsageListMethod = "cannot write target config usage list methods"
+	errWriteNetworkNodeMethod          = "cannot write network node methods"
+	errWriteNetworkNodeUsageMethod     = "cannot write network node usage methods"
+	errWriteNetworkNodeUsageListMethod = "cannot write network node usage list methods"
 )
 
 var (
 	headerFile          string
 	filenameManaged     string
 	filenameManagedList string
-	filenameTC          string
-	filenameTCU         string
-	filenameTCUList     string
+	filenameNN          string
+	filenameNNU         string
+	filenameNNUList     string
 	pattern             string
 )
 
@@ -104,13 +104,13 @@ var genmethodsetCmd = &cobra.Command{
 			if err := GenerateManagedList(filenameManagedList, header, pkg); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
-			if err := GenerateTargetConfig(filenameTC, header, pkg); err != nil {
+			if err := GenerateNetworkNode(filenameNN, header, pkg); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
-			if err := GenerateTargetConfigUsage(filenameTCU, header, pkg); err != nil {
+			if err := GenerateNetworkNodeUsage(filenameNNU, header, pkg); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
-			if err := GenerateTargetConfigUsageList(filenameTCUList, header, pkg); err != nil {
+			if err := GenerateNetworkNodeUsageList(filenameNNUList, header, pkg); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("%s : %s", err, pkg.PkgPath))
 			}
 		}
@@ -124,9 +124,9 @@ func init() {
 	genmethodsetCmd.Flags().StringVarP(&headerFile, "header-file", "", "", "The contents of this file will be added to the top of all generated files.")
 	genmethodsetCmd.Flags().StringVarP(&filenameManaged, "filename-managed", "", "zz_generated.managed.go", "The filename of generated managed resource files.")
 	genmethodsetCmd.Flags().StringVarP(&filenameManagedList, "filename-managed-list", "", "zz_generated.managedlist.go", "The filename of generated managed list resource files.")
-	genmethodsetCmd.Flags().StringVarP(&filenameTC, "filename-tc", "", "zz_generated.tc.go", "The filename of generated Target config files.")
-	genmethodsetCmd.Flags().StringVarP(&filenameTCU, "filename-tcu", "", "zz_generated.tcu.go", "The filename of generated Target config usage files.")
-	genmethodsetCmd.Flags().StringVarP(&filenameTCUList, "filename-tcu-list", "", "zz_generated.tculist.go", "The filename of generated Target list config usage files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameNN, "filename-nn", "", "zz_generated.nn.go", "The filename of generated NetworkNode files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameNNU, "filename-nnu", "", "zz_generated.nnu.go", "The filename of generated NetworkNode usage files.")
+	genmethodsetCmd.Flags().StringVarP(&filenameNNUList, "filename-nnu-list", "", "zz_generated.nnulist.go", "The filename of generated NetworkNode list usage files.")
 	genmethodsetCmd.Flags().StringVarP(&pattern, "paths", "", "", "Package(s) for which to generate methods, for example github.com/netw-device-driver/ndd-core/apis/...")
 }
 
@@ -139,8 +139,8 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 		"GetActive":                  method.NewGetActive(receiver, RuntimeImport),
 		"SetConditions":              method.NewSetConditions(receiver, RuntimeImport),
 		"GetCondition":               method.NewGetCondition(receiver, RuntimeImport),
-		"GetTargetConfigReference":   method.NewGetTargetConfigReference(receiver, RuntimeImport),
-		"SetTargetConfigReference":   method.NewSetTargetConfigReference(receiver, RuntimeImport),
+		"GetNetworkNodeReference":   method.NewGetNetworkNodeReference(receiver, RuntimeImport),
+		"SetNetworkNodeReference":   method.NewSetNetworkNodeReference(receiver, RuntimeImport),
 		"SetDeletionPolicy":          method.NewSetDeletionPolicy(receiver, RuntimeImport),
 		"GetDeletionPolicy":          method.NewGetDeletionPolicy(receiver, RuntimeImport),
 		"InitializeTargetConditions": method.NewInitializeTargetConditions(receiver, RuntimeImport),
@@ -186,8 +186,8 @@ func GenerateManagedList(filename, header string, p *packages.Package) error {
 	return errors.Wrap(err, errWriteManagedResourceListMethod)
 }
 
-// GenerateTargetConfig generates the resource.TargetConfig method set.
-func GenerateTargetConfig(filename, header string, p *packages.Package) error {
+// GenerateNetworkNode generates the resource.NetworkNode method set.
+func GenerateNetworkNode(filename, header string, p *packages.Package) error {
 	receiver := "p"
 
 	methods := method.Set{
@@ -201,21 +201,21 @@ func GenerateTargetConfig(filename, header string, p *packages.Package) error {
 		generate.WithHeaders(header),
 		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
 		generate.WithMatcher(match.AllOf(
-			match.TargetConfig(),
+			match.NetworkNode(),
 			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
 		),
 	)
 
-	return errors.Wrap(err, errWriteTargetConfigMethod)
+	return errors.Wrap(err, errWriteNetworkNodeMethod)
 }
 
-// GenerateTargetConfigUsage generates the resource.TargetConfigUsage method set.
-func GenerateTargetConfigUsage(filename, header string, p *packages.Package) error {
+// GenerateNetworkNodeUsage generates the resource.NetworkNodeUsage method set.
+func GenerateNetworkNodeUsage(filename, header string, p *packages.Package) error {
 	receiver := "p"
 
 	methods := method.Set{
-		"SetTargetConfigReference": method.NewSetRootTargetConfigReference(receiver, RuntimeImport),
-		"GetTargetConfigReference": method.NewGetRootTargetConfigReference(receiver, RuntimeImport),
+		"SetNetworkNodeReference": method.NewSetRootNetworkNodeReference(receiver, RuntimeImport),
+		"GetNetworkNodeReference": method.NewGetRootNetworkNodeReference(receiver, RuntimeImport),
 		"SetResourceReference":     method.NewSetRootResourceReference(receiver, RuntimeImport),
 		"GetResourceReference":     method.NewGetRootResourceReference(receiver, RuntimeImport),
 	}
@@ -224,31 +224,31 @@ func GenerateTargetConfigUsage(filename, header string, p *packages.Package) err
 		generate.WithHeaders(header),
 		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
 		generate.WithMatcher(match.AllOf(
-			match.TargetConfigUsage(),
+			match.NetworkNodeUsage(),
 			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
 		),
 	)
 
-	return errors.Wrap(err, errWriteTargetConfigUsageMethod)
+	return errors.Wrap(err, errWriteNetworkNodeUsageMethod)
 }
 
-// GenerateTargetConfigUsageList generates the
-// resource.TargetConfigUsageList method set.
-func GenerateTargetConfigUsageList(filename, header string, p *packages.Package) error {
+// GenerateNetworkNodeUsageList generates the
+// resource.NetworkNodeUsageList method set.
+func GenerateNetworkNodeUsageList(filename, header string, p *packages.Package) error {
 	receiver := "p"
 
 	methods := method.Set{
-		"GetItems": method.NewTargetConfigUsageGetItems(receiver, ResourceImport),
+		"GetItems": method.NewNetworkNodeUsageGetItems(receiver, ResourceImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
 		generate.WithHeaders(header),
 		generate.WithImportAliases(map[string]string{RuntimeImport: RuntimeAlias}),
 		generate.WithMatcher(match.AllOf(
-			match.TargetConfigUsageList(),
+			match.NetworkNodeUsageList(),
 			match.DoesNotHaveMarker(comments.In(p), DisableMarker, "false")),
 		),
 	)
 
-	return errors.Wrap(err, errWriteTargetConfigUsageListMethod)
+	return errors.Wrap(err, errWriteNetworkNodeUsageListMethod)
 }

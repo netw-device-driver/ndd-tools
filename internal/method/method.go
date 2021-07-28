@@ -118,24 +118,24 @@ func NewGetCondition(receiver, runtime string) New {
 	}
 }
 
-// NewSetTargetConfigReference returns a NewMethod that writes a SetTargetConfigReference
+// NewSetNetworkNodeReference returns a NewMethod that writes a SetNetworkNodeReference
 // method for the supplied Object to the supplied file.
-func NewSetTargetConfigReference(receiver, runtime string) New {
+func NewSetNetworkNodeReference(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
-		f.Commentf("SetTargetConfigReference of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetTargetConfigReference").Params(jen.Id("r").Op("*").Qual(runtime, "Reference")).Block(
-			jen.Id(receiver).Dot(fields.NameSpec).Dot("TargetConfigReference").Op("=").Id("r"),
+		f.Commentf("SetNetworkNodeReference of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetNetworkNodeReference").Params(jen.Id("r").Op("*").Qual(runtime, "Reference")).Block(
+			jen.Id(receiver).Dot(fields.NameSpec).Dot("NetworkNodeReference").Op("=").Id("r"),
 		)
 	}
 }
 
-// NewGetTargetConfigReference returns a NewMethod that writes a GetTargetConfigReference
+// NewGetNetworkNodeReference returns a NewMethod that writes a GetNetworkNodeReference
 // method for the supplied Object to the supplied file.
-func NewGetTargetConfigReference(receiver, runtime string) New {
+func NewGetNetworkNodeReference(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
-		f.Commentf("GetTargetConfigReference of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetTargetConfigReference").Params().Op("*").Qual(runtime, "Reference").Block(
-			jen.Return(jen.Id(receiver).Dot(fields.NameSpec).Dot("TargetConfigReference")),
+		f.Commentf("GetNetworkNodeReference of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetNetworkNodeReference").Params().Op("*").Qual(runtime, "Reference").Block(
+			jen.Return(jen.Id(receiver).Dot(fields.NameSpec).Dot("NetworkNodeReference")),
 		)
 	}
 }
@@ -247,30 +247,30 @@ func NewManagedGetItems(receiver, resource string) New {
 	}
 }
 
-// NewSetRootTargetConfigReference returns a NewMethod that writes a
-// SetTargetConfigReference method for the supplied Object to the supplied
-// file. Note that unlike NewSetTargetConfigReference the generated method
-// expects the TargetConfigReference to be at the root of the struct, not
+// NewSetRootNetworkNodeReference returns a NewMethod that writes a
+// SetNetworkNodeReference method for the supplied Object to the supplied
+// file. Note that unlike NewSetNetworkNodeReference the generated method
+// expects the NetworkNodeReference to be at the root of the struct, not
 // under its Spec field.
-func NewSetRootTargetConfigReference(receiver, runtime string) New {
+func NewSetRootNetworkNodeReference(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
-		f.Commentf("SetTargetConfigReference of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetTargetConfigReference").Params(jen.Id("r").Qual(runtime, "Reference")).Block(
-			jen.Id(receiver).Dot("TargetConfigReference").Op("=").Id("r"),
+		f.Commentf("SetNetworkNodeReference of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetNetworkNodeReference").Params(jen.Id("r").Qual(runtime, "Reference")).Block(
+			jen.Id(receiver).Dot("NetworkNodeReference").Op("=").Id("r"),
 		)
 	}
 }
 
-// NewGetRootTargetConfigReference returns a NewMethod that writes a
-// GetTargetConfigReference method for the supplied Object to the supplied
-// file. file. Note that unlike NewGetTargetConfigReference the generated
-// method expects the TargetConfigReference to be at the root of the struct,
+// NewGetRootNetworkNodeReference returns a NewMethod that writes a
+// GetNetworkNodeReference method for the supplied Object to the supplied
+// file. file. Note that unlike NewGetNetworkNodeReference the generated
+// method expects the NetworkNodeReference to be at the root of the struct,
 // not under its Spec field.
-func NewGetRootTargetConfigReference(receiver, runtime string) New {
+func NewGetRootNetworkNodeReference(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
-		f.Commentf("GetTargetConfigReference of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetTargetConfigReference").Params().Qual(runtime, "Reference").Block(
-			jen.Return(jen.Id(receiver).Dot("TargetConfigReference")),
+		f.Commentf("GetNetworkNodeReference of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetNetworkNodeReference").Params().Qual(runtime, "Reference").Block(
+			jen.Return(jen.Id(receiver).Dot("NetworkNodeReference")),
 		)
 	}
 }
@@ -297,13 +297,13 @@ func NewGetRootResourceReference(receiver, runtime string) New {
 	}
 }
 
-// NewTargetConfigUsageGetItems returns a New that writes a GetItems method for the
+// NewNetworkNodeUsageGetItems returns a New that writes a GetItems method for the
 // supplied object to the supplied file.
-func NewTargetConfigUsageGetItems(receiver, resource string) New {
+func NewNetworkNodeUsageGetItems(receiver, resource string) New {
 	return func(f *jen.File, o types.Object) {
 		f.Commentf("GetItems of this %s.", o.Name())
-		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetItems").Params().Index().Qual(resource, "TargetConfigUsage").Block(
-			jen.Id("items").Op(":=").Make(jen.Index().Qual(resource, "TargetConfigUsage"), jen.Len(jen.Id(receiver).Dot("Items"))),
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetItems").Params().Index().Qual(resource, "NetworkNodeUsage").Block(
+			jen.Id("items").Op(":=").Make(jen.Index().Qual(resource, "NetworkNodeUsage"), jen.Len(jen.Id(receiver).Dot("Items"))),
 			jen.For(jen.Id("i").Op(":=").Range().Id(receiver).Dot("Items")).Block(
 				jen.Id("items").Index(jen.Id("i")).Op("=").Op("&").Id(receiver).Dot("Items").Index(jen.Id("i")),
 			),

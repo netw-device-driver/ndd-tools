@@ -32,9 +32,9 @@ const (
 	NameStatus               = "Status"
 	NameResourceSpec         = "ResourceSpec"
 	NameResourceStatus       = "ResourceStatus"
-	NameTargetConfigSpec   = "TargetConfigSpec"
-	NameTargetConfigStatus = "TargetConfigStatus"
-	NameTargetConfigUsage  = "TargetConfigUsage"
+	NameNetworkNodeSpec   = "NetworkNodeSpec"
+	NameNetworkNodeStatus = "NetworkNodeStatus"
+	NameNetworkNodeUsage  = "NetworkNodeUsage"
 	NameItems                = "Items"
 )
 
@@ -48,9 +48,9 @@ const (
 	TypeSuffixStatus               = NameStatus
 	TypeSuffixResourceSpec         = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ResourceSpec"
 	TypeSuffixResourceStatus       = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.ResourceStatus"
-	TypeSuffixTargetConfigSpec   = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigSpec"
-	TypeSuffixTargetConfigStatus = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigStatus"
-	TypeSuffixTargetConfigUsage  = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.TargetConfigUsage"
+	TypeSuffixNetworkNodeSpec   = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.NetworkNodeSpec"
+	TypeSuffixNetworkNodeStatus = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.NetworkNodeStatus"
+	TypeSuffixNetworkNodeUsage  = "github.com/netw-device-driver/ndd-runtime/apis/common/v1.NetworkNodeUsage"
 )
 
 func matches(s *types.Struct, m Matcher) bool {
@@ -186,22 +186,22 @@ func IsResourceSpec() Matcher { return IsTypeNamed(TypeSuffixResourceSpec, NameR
 // appears to be a ndd managed resource status.
 func IsResourceStatus() Matcher { return IsTypeNamed(TypeSuffixResourceStatus, NameResourceStatus) }
 
-// IsTargetConfigSpec returns a Matcher that returns true if the supplied
+// IsNetworkNodeSpec returns a Matcher that returns true if the supplied
 // field appears to be a ndd target config spec.
-func IsTargetConfigSpec() Matcher {
-	return IsTypeNamed(TypeSuffixTargetConfigSpec, NameTargetConfigSpec)
+func IsNetworkNodeSpec() Matcher {
+	return IsTypeNamed(TypeSuffixNetworkNodeSpec, NameNetworkNodeSpec)
 }
 
-// IsTargetConfigStatus returns a Matcher that returns true if the supplied
+// IsNetworkNodeStatus returns a Matcher that returns true if the supplied
 // field appears to be a ndd target config status.
-func IsTargetConfigStatus() Matcher {
-	return IsTypeNamed(TypeSuffixTargetConfigStatus, NameTargetConfigStatus)
+func IsNetworkNodeStatus() Matcher {
+	return IsTypeNamed(TypeSuffixNetworkNodeStatus, NameNetworkNodeStatus)
 }
 
-// IsTargetConfigUsage returns a Matcher that returns true if the supplied
+// IsNetworkNodeUsage returns a Matcher that returns true if the supplied
 // field appears to be a ndd target config usage.
-func IsTargetConfigUsage() Matcher {
-	return IsTypeNamed(TypeSuffixTargetConfigUsage, NameTargetConfigUsage)
+func IsNetworkNodeUsage() Matcher {
+	return IsTypeNamed(TypeSuffixNetworkNodeUsage, NameNetworkNodeUsage)
 }
 
 // IsItems returns a Matcher that returns true if the supplied field appears to
