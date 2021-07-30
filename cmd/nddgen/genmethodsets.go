@@ -51,11 +51,11 @@ const (
 )
 
 const (
-	errLoadPackages                     = "cannot load packages"
-	errReadheaderFile                   = "cannot read header file"
-	errWriteManagedResourceMethod       = "cannot write managed resource method set for package"
-	errWriteManagedResourceListMethod   = "cannot write managed resource list method set for package"
-	errLoadingPackages                  = "error loading packages using pattern"
+	errLoadPackages                    = "cannot load packages"
+	errReadheaderFile                  = "cannot read header file"
+	errWriteManagedResourceMethod      = "cannot write managed resource method set for package"
+	errWriteManagedResourceListMethod  = "cannot write managed resource list method set for package"
+	errLoadingPackages                 = "error loading packages using pattern"
 	errWriteNetworkNodeMethod          = "cannot write network node methods"
 	errWriteNetworkNodeUsageMethod     = "cannot write network node usage methods"
 	errWriteNetworkNodeUsageListMethod = "cannot write network node usage list methods"
@@ -135,18 +135,16 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 	receiver := "mg"
 
 	methods := method.Set{
-		"SetActive":                  method.NewSetActive(receiver, RuntimeImport),
-		"GetActive":                  method.NewGetActive(receiver, RuntimeImport),
-		"SetConditions":              method.NewSetConditions(receiver, RuntimeImport),
-		"GetCondition":               method.NewGetCondition(receiver, RuntimeImport),
-		"GetNetworkNodeReference":   method.NewGetNetworkNodeReference(receiver, RuntimeImport),
-		"SetNetworkNodeReference":   method.NewSetNetworkNodeReference(receiver, RuntimeImport),
-		"SetDeletionPolicy":          method.NewSetDeletionPolicy(receiver, RuntimeImport),
-		"GetDeletionPolicy":          method.NewGetDeletionPolicy(receiver, RuntimeImport),
-		"InitializeTargetConditions": method.NewInitializeTargetConditions(receiver, RuntimeImport),
-		"DeleteTargetCondition":      method.NewDeleteTargetCondition(receiver, RuntimeImport),
-		"GetTargetCondition":         method.NewGetTargetCondition(receiver, RuntimeImport),
-		"SetTargetConditions":        method.NewSetTargetConditions(receiver, RuntimeImport),
+		"SetActive":               method.NewSetActive(receiver, RuntimeImport),
+		"GetActive":               method.NewGetActive(receiver, RuntimeImport),
+		"SetConditions":           method.NewSetConditions(receiver, RuntimeImport),
+		"GetCondition":            method.NewGetCondition(receiver, RuntimeImport),
+		"GetNetworkNodeReference": method.NewGetNetworkNodeReference(receiver, RuntimeImport),
+		"SetNetworkNodeReference": method.NewSetNetworkNodeReference(receiver, RuntimeImport),
+		"SetDeletionPolicy":       method.NewSetDeletionPolicy(receiver, RuntimeImport),
+		"GetDeletionPolicy":       method.NewGetDeletionPolicy(receiver, RuntimeImport),
+		"GetTarget":               method.NewGetTarget(receiver, RuntimeImport),
+		"SetTarget":               method.NewSetTarget(receiver, RuntimeImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
@@ -216,8 +214,8 @@ func GenerateNetworkNodeUsage(filename, header string, p *packages.Package) erro
 	methods := method.Set{
 		"SetNetworkNodeReference": method.NewSetRootNetworkNodeReference(receiver, RuntimeImport),
 		"GetNetworkNodeReference": method.NewGetRootNetworkNodeReference(receiver, RuntimeImport),
-		"SetResourceReference":     method.NewSetRootResourceReference(receiver, RuntimeImport),
-		"GetResourceReference":     method.NewGetRootResourceReference(receiver, RuntimeImport),
+		"SetResourceReference":    method.NewSetRootResourceReference(receiver, RuntimeImport),
+		"GetResourceReference":    method.NewGetRootResourceReference(receiver, RuntimeImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
