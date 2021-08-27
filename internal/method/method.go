@@ -223,7 +223,7 @@ func NewSetResourceIndexes(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
 		f.Commentf("SetResourceIndexes of this %s.", o.Name())
 		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetResourceIndexes").Params(jen.Id("n").Map(jen.String()).String()).Block(
-			jen.Id(receiver).Dot(fields.NameStatus).Dot("SetResourceIndexes").Op("=").Id("n"),
+			jen.Id(receiver).Dot(fields.NameStatus).Dot("ResourceIndexes").Op("=").Id("n"),
 		)
 	}
 }
