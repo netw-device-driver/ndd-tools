@@ -206,6 +206,28 @@ func NewSetExternalLeafRefs(receiver, runtime string) New {
 	}
 }
 
+// NewGetResourceIndexes returns a NewMethod that writes a GetResourceIndexes
+// method for the supplied Object to the supplied file.
+func NewGetResourceIndexes(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("GetResourceIndexes of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetResourceIndexes").Params().Map(jen.String()).String().Block(
+			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("ResourceIndexes")),
+		)
+	}
+}
+
+// NewSetResourceIndexes returns a NewMethod that writes a SetResourceIndexes
+// method for the supplied Object to the supplied file.
+func NewSetResourceIndexes(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("SetResourceIndexes of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetResourceIndexes").Params(jen.Id("n").Map(jen.String()).String()).Block(
+			jen.Id(receiver).Dot(fields.NameStatus).Dot("SetResourceIndexes").Op("=").Id("n"),
+		)
+	}
+}
+
 // NewSetUsers returns a NewMethod that writes a SetUsers method for the
 // supplied Object to the supplied file.
 func NewSetUsers(receiver string) New {
