@@ -147,6 +147,8 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 		"SetTarget":               method.NewSetTarget(receiver, RuntimeImport),
 		"GetExternalLeafRefs":     method.NewGetExternalLeafRefs(receiver, RuntimeImport),
 		"SetExternalLeafRefs":     method.NewSetExternalLeafRefs(receiver, RuntimeImport),
+		"GetResourceIndexes":      method.NewGetResourceIndexes(receiver, RuntimeImport),
+		"SetResourceIndexes":      method.NewSetResourceIndexes(receiver, RuntimeImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
