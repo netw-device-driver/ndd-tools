@@ -173,13 +173,35 @@ func NewGetTarget(receiver, runtime string) New {
 	}
 }
 
-// NewSetTarget returns a NewMethod that writes a NewSetTarget
+// NewSetTarget returns a NewMethod that writes a SetTarget
 // method for the supplied Object to the supplied file.
 func NewSetTarget(receiver, runtime string) New {
 	return func(f *jen.File, o types.Object) {
 		f.Commentf("SetTarget of this %s.", o.Name())
 		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetTarget").Params(jen.Id("t").Index().String()).Block(
 			jen.Id(receiver).Dot(fields.NameStatus).Dot("Target").Op("=").Id("t"),
+		)
+	}
+}
+
+// NewGetExternalLeafRefs returns a NewMethod that writes a GetExternalLeafRefs
+// method for the supplied Object to the supplied file.
+func NewGetExternalLeafRefs(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("GetExternalLeafRefs of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("GetExternalLeafRefs").Params().Index().String().Block(
+			jen.Return(jen.Id(receiver).Dot(fields.NameStatus).Dot("ExternalLeafRefs")),
+		)
+	}
+}
+
+// NewSetExternalLeafRefs returns a NewMethod that writes a SetExternalLeafRefs
+// method for the supplied Object to the supplied file.
+func NewSetExternalLeafRefs(receiver, runtime string) New {
+	return func(f *jen.File, o types.Object) {
+		f.Commentf("SetExternalLeafRefs of this %s.", o.Name())
+		f.Func().Params(jen.Id(receiver).Op("*").Id(o.Name())).Id("SetExternalLeafRefs").Params(jen.Id("n").Index().String()).Block(
+			jen.Id(receiver).Dot(fields.NameStatus).Dot("ExternalLeafRefs").Op("=").Id("n"),
 		)
 	}
 }

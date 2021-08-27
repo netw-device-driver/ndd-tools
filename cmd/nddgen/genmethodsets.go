@@ -145,6 +145,8 @@ func GenerateManaged(filename, header string, p *packages.Package) error {
 		"GetDeletionPolicy":       method.NewGetDeletionPolicy(receiver, RuntimeImport),
 		"GetTarget":               method.NewGetTarget(receiver, RuntimeImport),
 		"SetTarget":               method.NewSetTarget(receiver, RuntimeImport),
+		"GetExternalLeafRefs":     method.NewGetExternalLeafRefs(receiver, RuntimeImport),
+		"SetExternalLeafRefs":     method.NewSetExternalLeafRefs(receiver, RuntimeImport),
 	}
 
 	err := generate.WriteMethods(p, methods, filepath.Join(filepath.Dir(p.GoFiles[0]), filename),
